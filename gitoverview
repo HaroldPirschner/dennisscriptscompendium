@@ -8,14 +8,14 @@ GO_DEEPER=true
 function displayUsage {
     echo "Usage: $0 [OPTIONS]"
     echo "    Valid options are:"
-    echo "    -a | --all"
-    echo "        Same as --recursive --svn"
-    echo "    -r | --recursive"
-    echo "        Searches in subfolders recursively"
-    echo "    -s | --svn"
-    echo "        Searches also for changes in SVN repositories"
-    echo "    -h | --help"
-    echo "        Displays this help"
+    echo "    -a"
+    echo "        Displays all repositories below the path. Same as -r -s."
+    echo "    -r"
+    echo "        Searches in subfolders recursively."
+    echo "    -s"
+    echo "        Searches also for changes in SVN repositories."
+    echo "    -h"
+    echo "        Displays this help."
     exit 0
 }
 
