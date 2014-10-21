@@ -1,9 +1,9 @@
 #!/bin/bash
 
 startPath=""
-lookupSVN=0
-recursive=0
-goDeeper=1
+lookupSVN=false
+recursive=false
+goDeeper=true
 
 function displayUsage {
     echo "Usage: $0 [OPTIONS]"
@@ -25,18 +25,18 @@ if [ -e ".git" ]; then
     if [ ! "x$gitStatusMessage" == "x" ]; then
         echo "[GIT] "`pwd`
         git status -s 2> /dev/null
-        echo ""
-        goDeeper=0
+        echo
+        goDeeper=false
     fi
 fi
-if [ "$lookupSVN" == 1 ]; then
+if $lookupSVN ; then
     if [ -e ".svn" ]; then
         svnStatusMessage=`svn st`
         if [ ! "x$svnStatusMessage" == "x" ]; then
             echo "[SVN] "`pwd`
             svn st 2> /dev/null
-            echo ""
-            goDeeper=0
+            echo
+            goDeeper=false
         fi
     fi
 fi
@@ -48,11 +48,11 @@ do
     if [ -d "$folder" ]; then
         cd "./${folder}"
         evaluateCurrentFolder
-        if [ "$recursive" == 1 ]; then
-            if [ "$goDeeper" == 1 ]; then
+        if $recursive ; then
+            if $goDeeper ; then
                 searchSubfolders
             else
-                goDeeper=1
+                goDeeper=true
             fi
         fi
         cd ..
@@ -76,7 +76,7 @@ while getopts "hasrp:" optArg; do
             displayUsage
             ;;
         s)
-            lookupSVN=1
+            lookupSVN=true
             ;; 
         p)
             startPath="$OPTARG"
@@ -84,11 +84,11 @@ while getopts "hasrp:" optArg; do
             cd "$startPath"
             ;; 
         r)
-            recursive=1
+            recursive=true
             ;; 
         a)
-            lookupSVN=1
-            recursive=1
+            lookupSVN=true
+            recursive=true
             ;;
     esac
 done
