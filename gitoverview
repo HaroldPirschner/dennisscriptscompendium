@@ -1,0 +1,96 @@
+#!/bin/bash
+
+startPath=""
+lookupSVN=0
+recursive=0
+goDeeper=1
+
+function displayUsage {
+    echo "Usage: $0 [OPTIONS]"
+    echo "    Valid options are:"
+    echo "    -a | --all"
+    echo "        Same as --recursive --svn"
+    echo "    -r | --recursive"
+    echo "        Searches in subfolders recursively"
+    echo "    -s | --svn"
+    echo "        Searches also for changes in SVN repositories"
+    echo "    -h | --help"
+    echo "        Displays this help"
+    exit 0
+}
+
+function evaluateCurrentFolder {
+if [ -e ".git" ]; then
+    gitStatusMessage=`git status -s`
+    if [ ! "x$gitStatusMessage" == "x" ]; then
+        echo "[GIT] "`pwd`
+        git status -s 2> /dev/null
+        echo ""
+        goDeeper=0
+    fi
+fi
+if [ "$lookupSVN" == 1 ]; then
+    if [ -e ".svn" ]; then
+        svnStatusMessage=`svn st`
+        if [ ! "x$svnStatusMessage" == "x" ]; then
+            echo "[SVN] "`pwd`
+            svn st 2> /dev/null
+            echo ""
+            goDeeper=0
+        fi
+    fi
+fi
+}
+
+function searchSubfolders {
+for folder in *
+do
+    if [ -d "$folder" ]; then
+        cd "./${folder}"
+        evaluateCurrentFolder
+        if [ "$recursive" == 1 ]; then
+            if [ "$goDeeper" == 1 ]; then
+                searchSubfolders
+            else
+                goDeeper=1
+            fi
+        fi
+        cd ..
+    fi
+done
+}
+
+function checkPath {
+    if [ -d "$startPath" ]; then
+        echo "Searching in $startPath"
+    else
+        echo "No such file or file is no directory: $startPath"
+        exit 1
+    fi
+}
+
+
+while getopts "hasrp:" optArg; do
+    case "$optArg" in
+        h)
+            displayUsage
+            ;;
+        s)
+            lookupSVN=1
+            ;; 
+        p)
+            startPath="$OPTARG"
+            checkPath
+            cd "$startPath"
+            ;; 
+        r)
+            recursive=1
+            ;; 
+        a)
+            lookupSVN=1
+            recursive=1
+            ;;
+    esac
+done
+evaluateCurrentFolder
+searchSubfolders
