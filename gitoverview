@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# IMPROVEMENTS:
+#  - option '-a' searches svn, git and hidden folders
+#  - option '-r' can be deleted and replaced by...
+#  - ... option '-d' for specifying maxdepth of searching
+
 START_PATH=""
 LOOKUP_SVN=false
 RECURSIVE=false
@@ -16,6 +21,8 @@ function displayUsage {
     echo "        Searches also for changes in SVN repositories."
     echo "    -h"
     echo "        Displays this help."
+    echo "    -p PATH"
+    echo "        Specifies the path in which this script will search."
     exit 0
 }
 
