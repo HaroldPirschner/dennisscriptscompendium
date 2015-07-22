@@ -1,0 +1,21 @@
+#!/bin/bash
+
+INPUT=${1}
+OUTPUT=${2}
+
+if [ "x${INPUT}" == "x" ]; then
+    echo "You need to specify a source and a destination target!"
+    exit 1
+fi
+
+if [ "x${OUTPUT}" == "x" ]; then
+    FILE_TYPE="${INPUT##*.}"
+    TMP_DIR=`mktemp -d`
+    touch ${TMP_DIR}/output.${FILE_TYPE}
+    OUTPUT=${TMP_DIR}/output.${FILE_TYPE}
+    echo "[INFO] You did not specify a destination target. Output will be written to: ${OUTPUT}"
+fi
+if [ "${OUTPUT}" == "*.svg" ]; then
+    echo "[WARNING] Creating SVG files seems to cause problems. Writing output into raster images such as PNG or JPG is recommended!"
+fi
+convert ${INPUT} -colorspace Gray ${OUTPUT}
