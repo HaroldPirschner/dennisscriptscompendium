@@ -11,6 +11,7 @@ RECURSIVE=false
 GO_DEEPER=true
 
 function displayUsage {
+    echo "Searches in the subfolders of the current directory and displays uncommitted changes in GIT repositories that are found."
     echo "Usage: $0 [OPTIONS]"
     echo "    Valid options are:"
     echo "    -a"
@@ -19,10 +20,10 @@ function displayUsage {
     echo "        Searches in subfolders recursively."
     echo "    -s"
     echo "        Searches also for changes in SVN repositories."
+    echo "    -p <PATH>"
+    echo "        Specifies the path in which this script will search."
     echo "    -h"
     echo "        Displays this help."
-    echo "    -p PATH"
-    echo "        Specifies the path in which this script will search."
     exit 0
 }
 
